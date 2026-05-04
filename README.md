@@ -5,7 +5,7 @@ CSS, and JavaScript.
 
 ## 🚀 Live Demo
 
-👉 https://your-username.github.io/guess-number-game/
+👉 [https://your-username.github.io/guess-number-game/](https://saquibhere08.github.io/Guess-The-Correct-Number/)
 
 ------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ Works on mobile, tablet, and desktop
 
 ## 🙌 Author
 
-Your Name
+Saquib Bin Halim
 
 ------------------------------------------------------------------------
 
