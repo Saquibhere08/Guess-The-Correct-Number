@@ -1,107 +1,92 @@
-# 🎯 Guess the Number (Java Mini Project)
+# 🎯 Guess The Number Game
 
-A simple console-based number guessing game built using Java.  
-The program generates a random number, and the user has to guess it with hints provided after each attempt.
+A modern, interactive web-based number guessing game built using HTML,
+CSS, and JavaScript.
 
----
+## 🚀 Live Demo
 
-## 📌 Features
+👉 https://your-username.github.io/guess-number-game/
 
-- 🔢 Random number generation  
-- 🎮 Interactive user input via console  
-- 📉 Hints for each guess:  
-  - Too high  
-  - Too low  
-- 🔁 Continuous guessing until correct  
-- 🧠 Beginner-friendly logic and structure  
+------------------------------------------------------------------------
 
----
+## ✨ Features
+
+-   🎮 Interactive gameplay (Guess between 0--100)
+-   🤖 Smart AI hints (warmer/colder feedback)
+-   🔊 Sound effects (click, wrong, win)
+-   🎵 Background music with volume control
+-   🔇 Mute toggle system
+-   🏆 Best score tracking (saved locally)
+-   📱 Fully responsive design (mobile + desktop)
+-   ⌨️ Keyboard support (Enter key)
+-   💡 Hint button for guidance
+
+------------------------------------------------------------------------
 
 ## 🛠️ Technologies Used
 
-- Java  
-- `java.util.Scanner` for input  
-- `Math.random()` for random number generation  
+-   HTML5\
+-   CSS3\
+-   JavaScript (Vanilla JS)
 
----
+------------------------------------------------------------------------
 
-## 🚀 How It Works
+## 📂 Project Structure
 
-1. The program generates a random number between **0 and 99**  
-2. The user is prompted to enter a number  
-3. The program compares the guess with the generated number:  
-   - If correct → displays success message  
-   - If higher → "Too Large"  
-   - If lower → "Too Small"  
-4. The loop continues until the correct number is guessed  
-5. Finally, the correct number is displayed  
+guess-number-game/ └── index.html
 
----
+------------------------------------------------------------------------
 
-## ▶️ How to Run
+## 🎮 How to Play
 
-1. Clone the repository:
-```
-git clone https://github.com/your-username/guess-the-number.git
-```
+1.  Enter a number between 0 and 100
+2.  Click Guess
+3.  Follow hints (Too High / Too Low / Closer / Farther)
+4.  Try to win in minimum attempts
 
-2. Navigate to the project folder:
-```
-cd guess-the-number
-```
+------------------------------------------------------------------------
 
-3. Compile the program:
-```
-javac mini_Project/Main.java
-```
+## 🔊 Audio Features
 
-4. Run the program:
-```
-java mini_Project.Main
-```
+-   Background music with volume control
+-   Sound effects for click, wrong guess, and win
 
----
+------------------------------------------------------------------------
 
-## 💡 Sample Output
+## 💾 Data Storage
 
-```
-Enter your Number:
-50
-Your Number is toooo Large.
+Uses localStorage to save best score
 
-Enter your Number:
-25
-Your Number is toooo Small.
+------------------------------------------------------------------------
 
-Enter your Number:
-37
-Wohooooooooooooo Correct Number....
+## 📱 Responsive Design
 
-The Number was:
-37
-```
+Works on mobile, tablet, and desktop
 
----
+------------------------------------------------------------------------
 
-## ⚠️ Notes / Improvements
+## ⚠️ Notes
 
-- Currently generates numbers from **0–99**  
-- Loop condition can be simplified (`while(true)`)  
-- No attempt counter (can be added for enhancement)  
-- Input validation is not implemented  
+-   First click required to start audio (browser policy)
+-   Fully client-side (no backend)
 
----
+------------------------------------------------------------------------
 
-## 🌟 Future Enhancements
+## 🚀 Future Improvements
 
-- ✅ Add attempt counter  
-- 🎚️ Difficulty levels (Easy/Medium/Hard)  
-- 🧮 Score system  
-- ❌ Input validation (handle invalid inputs)  
-- 🧱 Convert into modular code using methods/classes  
+-   Online leaderboard
+-   Login system
+-   Difficulty levels
+-   PWA support
 
----
+------------------------------------------------------------------------
 
 ## 🙌 Author
 
-- Saquib.
+Your Name
+
+------------------------------------------------------------------------
+
+## ⭐ Support
+
+If you like this project, give it a star!
