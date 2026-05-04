@@ -10,7 +10,7 @@ public class Main {
         int userNumber=0;
 
         do{
-            System.out.println("Enter your Number: ");
+            System.out.println("Enter your Number(0-100): ");
             userNumber=sc.nextInt();
             if(userNumber==num){
                 System.out.println("Wohooooooooooooo Correct Number....");
