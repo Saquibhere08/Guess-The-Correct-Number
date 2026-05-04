@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guess The Number 🎯</title>
 
 <style>
@@ -11,7 +12,8 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,8 +21,9 @@ body {
 }
 
 .container {
-    width: 340px;
-    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    padding: 25px;
     border-radius: 20px;
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(15px);
@@ -30,8 +33,8 @@ body {
 }
 
 input {
-    width: 80%;
-    padding: 10px;
+    width: 100%;
+    padding: 12px;
     border-radius: 10px;
     border: none;
     text-align: center;
@@ -39,14 +42,14 @@ input {
 }
 
 button {
-    width: 85%;
-    padding: 10px;
+    width: 100%;
+    padding: 12px;
     margin-top: 10px;
     border: none;
     border-radius: 10px;
     background: linear-gradient(45deg, #ff7a18, #ff3d00);
     color: white;
-    font-size: 15px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -73,13 +76,15 @@ button:hover {
 }
 
 .controls {
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: 15px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .toggle {
     cursor: pointer;
-    margin-bottom: 5px;
 }
 
 .slider-box {
@@ -104,6 +109,14 @@ input[type="range"] {
     50% {transform: translateX(5px);}
     75% {transform: translateX(-5px);}
 }
+
+/* 📱 Mobile Optimization */
+@media (max-width: 480px) {
+    h2 { font-size: 20px; }
+    .container { padding: 20px; }
+    .message { font-size: 16px; }
+    .hint { font-size: 13px; }
+}
 </style>
 </head>
 
@@ -114,7 +127,6 @@ input[type="range"] {
     <p>Between 0 and 100</p>
 
     <input id="guess" type="number" placeholder="Enter number">
-    <br>
     <button onclick="checkGuess()">Guess</button>
     <button onclick="restart()">Restart</button>
 
@@ -154,17 +166,13 @@ let best = localStorage.getItem("best");
 const bgMusic = document.getElementById("bgMusic");
 const slider = document.getElementById("volumeSlider");
 
-// default volume
 bgMusic.volume = 0.5;
 
-// Start music on first click (browser policy)
+// Start music on first interaction
 document.body.addEventListener("click", () => {
-    if (bgMusic.paused) {
-        bgMusic.play().catch(()=>{});
-    }
+    if (bgMusic.paused) bgMusic.play().catch(()=>{});
 }, { once: true });
 
-// play sound safely
 function play(id) {
     if (soundOn) {
         const s = document.getElementById(id);
@@ -233,7 +241,6 @@ function checkGuess() {
     msg.style.color = "#ffd166";
 
     let hint = smartHint(diff);
-
     if (lastDiff !== null) {
         hint += diff < lastDiff ? " 🔥 Closer" : " ❄️ Farther";
     }
@@ -281,13 +288,11 @@ function toggleSound() {
         soundOn ? "🔊 Sound" : "🔇 Muted";
 }
 
-// volume slider
 slider.addEventListener("input", () => {
     bgMusic.volume = slider.value / 100;
     soundOn = slider.value > 0;
 });
 
-// Enter key support
 document.getElementById("guess").addEventListener("keydown", function(e){
     if(e.key === "Enter") checkGuess();
 });
