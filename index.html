@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Guess The Number 🎯</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.container {
+    width: 340px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+}
+
+button {
+    width: 85%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #ff7a18, #ff3d00);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 18px;
+    min-height: 25px;
+}
+
+.hint {
+    font-size: 14px;
+    color: #00d9ff;
+    margin-top: 5px;
+}
+
+.score {
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.controls {
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.toggle {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.slider-box {
+    margin-top: 5px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    25% {transform: translateX(-5px);}
+    50% {transform: translateX(5px);}
+    75% {transform: translateX(-5px);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="box">
+    <h2>🎯 Guess The Number</h2>
+    <p>Between 0 and 100</p>
+
+    <input id="guess" type="number" placeholder="Enter number">
+    <br>
+    <button onclick="checkGuess()">Guess</button>
+    <button onclick="restart()">Restart</button>
+
+    <div class="message" id="msg"></div>
+    <div class="hint" id="hint"></div>
+    <div class="score" id="score"></div>
+
+    <div class="controls">
+        <div class="toggle" onclick="toggleSound()">🔊 Sound</div>
+        <div class="toggle" onclick="giveHint()">💡 Hint</div>
+
+        <div class="slider-box">
+            🎵 Volume
+            <input type="range" id="volumeSlider" min="0" max="100" value="50">
+        </div>
+    </div>
+</div>
+
+<!-- SOUND EFFECTS -->
+<audio id="win" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9bfae3.mp3"></audio>
+<audio id="wrong" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3"></audio>
+<audio id="click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c8e6c4e3d.mp3"></audio>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2f9f3e4b58.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let number = Math.floor(Math.random() * 101);
+let attempts = 0;
+let lastDiff = null;
+let finished = false;
+let soundOn = true;
+let best = localStorage.getItem("best");
+
+const bgMusic = document.getElementById("bgMusic");
+const slider = document.getElementById("volumeSlider");
+
+// default volume
+bgMusic.volume = 0.5;
+
+// Start music on first click (browser policy)
+document.body.addEventListener("click", () => {
+    if (bgMusic.paused) {
+        bgMusic.play().catch(()=>{});
+    }
+}, { once: true });
+
+// play sound safely
+function play(id) {
+    if (soundOn) {
+        const s = document.getElementById(id);
+        s.currentTime = 0;
+        s.play();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score").textContent =
+        `Attempts: ${attempts} | Best: ${best ?? "--"}`;
+}
+
+updateScore();
+
+function smartHint(diff) {
+    if (diff <= 5) return "🔥 Extremely close!";
+    if (diff <= 10) return "😮 Very close!";
+    if (diff <= 20) return "🙂 Warm";
+    if (diff <= 40) return "😐 Cold";
+    return "🥶 Very far";
+}
+
+function checkGuess() {
+    if (finished) return;
+
+    play("click");
+
+    let input = document.getElementById("guess");
+    let guess = Number(input.value);
+    let msg = document.getElementById("msg");
+    let hintBox = document.getElementById("hint");
+    let box = document.getElementById("box");
+
+    if (isNaN(guess) || guess < 0 || guess > 100) {
+        msg.textContent = "⚠️ Invalid input!";
+        box.classList.add("shake");
+        setTimeout(()=>box.classList.remove("shake"),300);
+        return;
+    }
+
+    attempts++;
+    updateScore();
+
+    let diff = Math.abs(number - guess);
+
+    if (guess === number) {
+        msg.textContent = "🎉 Correct!";
+        msg.style.color = "#00ffcc";
+        hintBox.textContent = "";
+        play("win");
+
+        if (!best || attempts < best) {
+            localStorage.setItem("best", attempts);
+            best = attempts;
+        }
+
+        finished = true;
+        updateScore();
+        return;
+    }
+
+    play("wrong");
+
+    msg.textContent = guess > number ? "📈 Too High" : "📉 Too Low";
+    msg.style.color = "#ffd166";
+
+    let hint = smartHint(diff);
+
+    if (lastDiff !== null) {
+        hint += diff < lastDiff ? " 🔥 Closer" : " ❄️ Farther";
+    }
+
+    hintBox.textContent = hint;
+    lastDiff = diff;
+
+    input.value = "";
+}
+
+function giveHint() {
+    let range = 10;
+    let min = Math.max(0, number - range);
+    let max = Math.min(100, number + range);
+
+    document.getElementById("hint").textContent =
+        `💡 Between ${min} and ${max}`;
+}
+
+function restart() {
+    number = Math.floor(Math.random() * 101);
+    attempts = 0;
+    lastDiff = null;
+    finished = false;
+
+    document.getElementById("msg").textContent = "";
+    document.getElementById("hint").textContent = "";
+    document.getElementById("guess").value = "";
+
+    updateScore();
+}
+
+function toggleSound() {
+    soundOn = !soundOn;
+
+    if (!soundOn) {
+        bgMusic.volume = 0;
+        slider.value = 0;
+    } else {
+        bgMusic.volume = 0.5;
+        slider.value = 50;
+    }
+
+    document.querySelector(".toggle").textContent =
+        soundOn ? "🔊 Sound" : "🔇 Muted";
+}
+
+// volume slider
+slider.addEventListener("input", () => {
+    bgMusic.volume = slider.value / 100;
+    soundOn = slider.value > 0;
+});
+
+// Enter key support
+document.getElementById("guess").addEventListener("keydown", function(e){
+    if(e.key === "Enter") checkGuess();
+});
+</script>
+
+</body>
+</html>
